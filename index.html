@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space invaders</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/app.js"></script>
+</head>
+ <body style="background-image: url(./image/fond3.gif); margin: 0px; padding: 0px; 
+ width: 100%; height: 100%; background-size: cover; overflow: hidden;"> 
+
+
+    <script type="text/javascript">
+    //groupe allien
+    var allien1 = new Sprite("./image/allien1.png", 100, 50 );
+    var allien2 = new Sprite("./image/allien2.png", 350, 50 );
+    var allien3 = new Sprite("./image/allien3.png", 600, 50 );
+    var allien4 = new Sprite("./image/allien4.png", 850, 50 );
+    var allien5 = new Sprite("./image/allien5.png", 1100, 50 );
+
+    var allien6 = new Sprite("./image/allien1.png", 250, 150 );
+    var allien7 = new Sprite("./image/allien2.png", 500, 150 );
+    var allien8 = new Sprite("./image/allien3.png", 750, 150 );
+    var allien9 = new Sprite("./image/allien4.png", 1000, 150 );
+    var allien10 = new Sprite("./image/allien5.png", 1250, 150 );
+
+    var allien11 = new Sprite("./image/allien1.png", 100, 250 );
+    var allien12 = new Sprite("./image/allien2.png", 350, 250 );
+    var allien13 = new Sprite("./image/allien3.png", 600, 250 );
+    var allien14 = new Sprite("./image/allien4.png", 850, 250 );
+    var allien15 = new Sprite("./image/allien5.png", 1100,250 );
+
+    var missile = new Sprite("./image/missile.png", 0, 0 );
+    missile.display = "none";
+
+    var vaisseau  = new Sprite( "./image/vaisseau.png", 600, 550 );
+
+    document.onkeydown = function ( event ){
+        if (event.keyCode == 103) {                     //deplacement haut /gauche
+            vaisseau.left -= 10;
+            vaisseau.top -= 10;
+        } else if (event.keyCode == 104) {              //deplacement haut 
+            vaisseau.top -= 10;
+        } else if (event.keyCode == 105) {              //deplacement haut/droite
+            vaisseau.left += 10;
+            vaisseau.top -= 10;
+        } else if (event.keyCode == 100) {              //deplacement gauche
+            vaisseau.left -= 10;
+        } else if (event.keyCode == 102) {              //deplacement droite
+            vaisseau.left += 10;
+        } else if (event.keyCode == 97) {              //deplacement bas/gauche
+            vaisseau.left -= 10;
+            vaisseau.top += 10;
+        } else if (event.keyCode == 98) {              //deplacement bas
+            vaisseau.top += 10;
+        } else if (event.keyCode == 99) {              //deplacement bas/droite
+            vaisseau.left += 10;
+            vaisseau.top += 10;
+        } 
+
+        
+
+        //dobordement/gauche/droite/haut/bas
+        if ( vaisseau.left < 0 ) {
+            vaisseau.left = 0;
+        }
+        if ( vaisseau.left > document.body.clientWidth - vaisseau._node.width ) {
+            vaisseau.left = document.body.clientWidth - vaisseau._node.width;
+        }
+        if ( vaisseau.top < 0 ) {
+            vaisseau.top = 0;
+        }
+        if ( vaisseau.top > document.body.clientWidth - vaisseau._node.width ) {
+            vaisseau.top = document.body.clientWidth - vaisseau._node.width;
+        }
+        if ( event.keyCode == 101 || event.keyCode == 32 ) {
+            if ( missile.display == "none") { 
+            missile.display = "block";
+            missile.left = vaisseau.left + (vaisseau._node.width - missile._node.width) / 2;
+            missile.top = vaisseau.top;
+            missile.startAnimation( moveMissile, 20 );
+        }
+        }
+    };
+      //lancement missile
+    function moveMissile( missile ) {
+        missile.top -= 10;
+        if ( missile.top < -30 ) { 
+        missile.stopAnimation(); 
+        missile.display = "none";
+    }
+
+    for( var i=1; i<=15; i++ ){
+        var allien = window["allien"+i];
+        if ( allien.display == "none" ) continue;
+        if ( missile.checkCollision( allien ) ) {
+            missile.stopAnimation();
+            missile.display = "none";
+            allien.stopAnimation();
+            allien.display = "none";
+            eatAudio.play();
+        }
+    }
+    }
+     //deplacement allien vers la gauche
+    function moveAllienToLeft ( allien ) {
+        allien.left -= 3;
+
+        if ( allien.left <= 0 ) {
+            allien.top += 50;
+            allien.startAnimation( moveAllienToRight, 20 );
+        }
+    }
+      //deplacement allien vers la droite
+    function moveAllienToRight ( allien ) {
+        allien.left += 3;
+
+        if ( allien.left > document.body.clientWidth - allien._node.width ) {
+            allien.top += 50;
+            allien.startAnimation( moveAllienToLeft, 20 );
+        }
+    }
+         for( var i=1; i<=15; i++ ) {
+             window["allien"+i].startAnimation( moveAllienToRight, 20);
+         }
+    // allien1.startAnimation( moveAllienToRight, 20 );
+    // allien2.startAnimation( moveAllienToRight, 20 );
+    // allien3.startAnimation( moveAllienToRight, 20 );
+    // allien4.startAnimation( moveAllienToRight, 20 );
+    // allien5.startAnimation( moveAllienToRight, 20 );
+
+    // allien6.startAnimation( moveAllienToRight, 20 );
+    // allien7.startAnimation( moveAllienToRight, 20 );
+    // allien8.startAnimation( moveAllienToRight, 20 );
+    // allien9.startAnimation( moveAllienToRight, 20 );
+    // allien10.startAnimation( moveAllienToRight, 20 );
+
+    // allien11.startAnimation( moveAllienToRight, 20 );
+    // allien12.startAnimation( moveAllienToRight, 20 );
+    // allien13.startAnimation( moveAllienToRight, 20 );
+    // allien14.startAnimation( moveAllienToRight, 20 );
+    // allien15.startAnimation( moveAllienToRight, 20 );
+
+    </script>
+     
+</body>
+</html>
